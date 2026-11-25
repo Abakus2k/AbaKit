@@ -1,0 +1,37 @@
+[workspace]
+resolver = "3"
+
+[package]
+name = "aba-kit"
+description = "Shared pieces of small Rust web apps behind a sign-on proxy: identity, security headers, CSRF guard, health, theme, tracing, SQLite"
+version = "0.1.0"
+repository = "https://github.com/Abakus2k/AbaKit"
+edition = "2024"
+license = "UNLICENSED"
+publish = false
+
+# An app must use the same axum, maud and rusqlite minor versions, because their types cross
+# the API.
+[dependencies]
+anyhow = "1"
+axum = "0.8.9"
+maud = { version = "0.27.0", features = ["axum"] }
+# Already in axum's tree: decodes the X-Aba-Name header.
+percent-encoding = "2.3"
+rusqlite = { version = "0.43.0", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter", "json"] }
+
+[dev-dependencies]
+http-body-util = "0.1.5"
+serde_json = "1"
+tempfile = "3.27.0"
+tokio = { version = "1.54.1", features = ["macros", "rt-multi-thread", "net"] }
+tower = { version = "0.5.3", features = ["util"] }
+# examples/hello.rs: request spans.
+tower-http = { version = "0.7.1", features = ["trace"] }
+
+[lints.rust]
+# On Windows, link.exe prints "creating library" lines in some locales; they are not problems.
+linker_messages = "allow"
